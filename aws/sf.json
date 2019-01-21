@@ -1,0 +1,107 @@
+{
+    "name": "SampleCluster",
+    "clusterConfigurationVersion": "1.0.0",
+    "apiVersion": "10-2017",
+    "nodes": [
+        {
+            "nodeName": "vm0",
+            "iPAddress": "EC2AMAZ-CPD62UR",
+            "nodeTypeRef": "NodeType0",
+            "faultDomain": "fd:/aws/private-b",
+            "upgradeDomain": "UD0"
+        },
+        {
+            "nodeName": "vm1",
+            "iPAddress": "EC2AMAZ-0QUDAKI",
+            "nodeTypeRef": "NodeType0",
+            "faultDomain": "fd:/aws/private-b",
+            "upgradeDomain": "UD1"
+        },
+        {
+            "nodeName": "vm2",
+            "iPAddress": "EC2AMAZ-UEO4D4A",
+            "nodeTypeRef": "NodeType0",
+            "faultDomain": "fd:/aws/private-b",
+            "upgradeDomain": "UD2"
+        }
+    ],
+    "properties": {
+        "diagnosticsStore": {
+            "metadata": "Please replace the diagnostics file share with an actual file share accessible from all cluster machines. For example, \\\\machine1\\DiagnosticsStore.",
+            "dataDeletionAgeInDays": "21",
+            "storeType": "FileShare",
+            "connectionstring": "c:\\ProgramData\\SF\\DiagnosticsStore"
+        },
+        "security": {
+            "ClusterCredentialType": "Windows",
+            "ServerCredentialType": "Windows",
+            "WindowsIdentities": {
+                "ClusterIdentity": "cloud.ad\\Domain Computers",
+                "ClientIdentities": [{
+                    "Identity": "cloud.ad\\SF",
+                    "IsAdmin": true
+                },{
+                    "Identity": "cloud.ad\\SF-RO",
+                    "IsAdmin": false
+                }]
+            }
+        },
+        "nodeTypes": [
+            {
+                "name": "NodeType0",
+                "clientConnectionEndpointPort": "19000",
+                "clusterConnectionEndpointPort": "19001",
+                "leaseDriverEndpointPort": "19002",
+                "serviceConnectionEndpointPort": "19003",
+                "httpGatewayEndpointPort": "19080",
+                "reverseProxyEndpointPort": "19081",
+                "applicationPorts": {
+                    "startPort": "20001",
+                    "endPort": "20031"
+                },
+                "ephemeralPorts": {
+                    "startPort": "49152",
+                    "endPort": "65535"
+                },
+                "isPrimary": true
+            }
+        ],
+        "fabricSettings": [
+            {
+                "name": "Setup",
+                "parameters": [
+                    {
+                        "name": "FabricDataRoot",
+                        "value": "C:\\ProgramData\\SF"
+                    },
+                    {
+                        "name": "FabricLogRoot",
+                        "value": "C:\\ProgramData\\SF\\Log"
+                    }
+                ]
+            },
+            {
+                "name": "FileStoreService",
+                "parameters": [
+                    {
+                        "name": "AnonymousAccessEnabled",
+                        "value": "false"
+                    }
+                ]
+            },
+            {
+                "name": "EventStoreService",
+                "parameters": [
+                    {
+                        "name": "TargetReplicaSetSize",
+                        "value": "3"
+                    },
+                    {
+                        "name": "MinReplicaSetSize",
+                        "value": "1"
+                    }
+                ]
+            }
+        ]
+    }
+}

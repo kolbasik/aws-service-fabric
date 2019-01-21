@@ -1,0 +1,18 @@
+<powershell>
+# https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-tutorial-standalone-create-infrastructure
+
+netsh advfirewall firewall set rule group="File and Printer Sharing" new enable=Yes
+
+New-NetFirewallRule -DisplayName "Allow inbound ICMPv4" -Direction Inbound -Protocol ICMPv4 -IcmpType 8 -RemoteAddress Any -Action Allow
+New-NetFirewallRule -DisplayName "Allow inbound Service Fabric Int" -Direction Inbound -Protocol TCP -LocalPort 135,137-139,445 -RemoteAddress Any -Action Allow
+New-NetFirewallRule -DisplayName "Allow inbound Serfice Fabric Ext" -Direction Inbound -Protocol TCP -LocalPort 19000-19003,19080-19081,20001-21000 -RemoteAddress Any -Action Allow
+
+Set-Service -Name RemoteRegistry -StartUpType Automatic
+Start-Service -Name RemoteRegistry
+Get-Service -Name RemoteRegistry
+
+Invoke-WebRequest "http://go.microsoft.com/fwlink/?LinkId=730690" -OutFile c:\sf.zip
+#Start-BitsTransfer -Source "http://go.microsoft.com/fwlink/?LinkId=730690" -Destination c:\SF.zip
+Expand-Archive c:\sf.zip c:\sf
+
+</powershell>
